@@ -69,6 +69,7 @@ public class BigFileReader {
             System.out.println("分配分片："+pair);
             this.executorService.execute(new SliceReaderTask(pair));
         }
+        this.handle.init();
     }
 
     private void calculateStartEnd(long start,long size) throws IOException{

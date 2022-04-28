@@ -56,6 +56,11 @@ public class SwingFileHandleImpl implements FileHandle {
     }
 
     @Override
+    public void init() {
+        this.mainFrame.setEnabledToggleButton(true);
+    }
+
+    @Override
     public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
         if (success.compareAndSet(true, true) || stop) {
             //logger.info("密码已找到，不再执行");
@@ -70,19 +75,19 @@ public class SwingFileHandleImpl implements FileHandle {
                 if (sevenzNullPasswordUse.compareAndSet(false, true)) {
                     sevenZFile = new SevenZFile(file, sevenzNullPassword.toCharArray());
                     if (success.compareAndSet(false, true)) {
-                        mainFrame.appendMsg("压缩包无密码！");
-                        logger.info("压缩包无密码！");
-                        mainFrame.resetToggleButton(null);
+                        mainFrame.appendMsg("压缩包无密码！等待线程池关闭...");
+                        logger.info("压缩包无密码！等待线程池关闭...");
+                        mainFrame.setEnabledToggleButton(false);
                         bigFileReader.shutdown();
-                        mainFrame.showMessageDialog("压缩包无密码！");
+                        mainFrame.showMessageDialog("压缩包无密码！等待线程池关闭...");
                         return;
                     }
                 } else {
                     sevenZFile = new SevenZFile(file, line.toCharArray());
                     if (success.compareAndSet(false, true)) {
-                        mainFrame.appendMsg("找到密码[" + line + "]！");
-                        logger.info("找到密码[" + line + "]！");
-                        mainFrame.resetToggleButton(null);
+                        mainFrame.appendMsg("找到密码[" + line + "]！等待线程池关闭...");
+                        logger.info("找到密码[" + line + "]！等待线程池关闭...");
+                        mainFrame.setEnabledToggleButton(false);
                         bigFileReader.shutdown();
                         mainFrame.showMessageDialog("找到密码[" + line + "]！");
                         return;
@@ -111,11 +116,11 @@ public class SwingFileHandleImpl implements FileHandle {
                         inputStream.close();
 
                         if (success.compareAndSet(false, true)) {
-                            mainFrame.appendMsg("找到密码[" + line + "]！");
-                            logger.info("找到密码[" + line + "]！");
-                            mainFrame.resetToggleButton(null);
-                            mainFrame.showMessageDialog("找到密码[" + line + "]！");
+                            mainFrame.setEnabledToggleButton(false);
+                            mainFrame.appendMsg("找到密码[" + line + "]！等待线程池关闭...");
+                            logger.info("找到密码[" + line + "]！等待线程池关闭...");
                             bigFileReader.shutdown();
+                            mainFrame.showMessageDialog("找到密码[" + line + "]！");
                             return;
                         }
                     } else {
@@ -126,7 +131,7 @@ public class SwingFileHandleImpl implements FileHandle {
                 }
 
                 if (success.compareAndSet(false, true)) {
-                    mainFrame.resetToggleButton(null);
+                    mainFrame.setEnabledToggleButton(false);
                     bigFileReader.setCompleteCallback(new CompleteCallback() {
 
                         @Override

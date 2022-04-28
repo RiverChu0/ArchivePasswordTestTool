@@ -37,6 +37,11 @@ public class FileHandleImpl implements FileHandle {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void handle(String line, long currentLineCount, BigFileReader bigFileReader) {
         if (success.compareAndSet(true, true)) {
             //logger.info("密码已找到，不再执行");

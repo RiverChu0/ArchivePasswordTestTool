@@ -179,10 +179,15 @@ public class MainFrame extends JFrame {
 
     }
 
+    public void setEnabledToggleButton(boolean enabled) {
+        this.okBtn.setEnabled(enabled);
+    }
+
     public void resetToggleButton(JToggleButton button) {
         if (button == null) {
             button = this.okBtn;
         }
+        button.setEnabled(true);
         button.setSelected(false);
         button.setText("开始试密");
         button.setForeground(Color.WHITE);
@@ -208,6 +213,7 @@ public class MainFrame extends JFrame {
             if (selected) {
                 source.setForeground(Color.GREEN);
                 source.setText("停止");
+                source.setEnabled(false);
 
                 String dictPath = dictTextField.getText();
                 String cpsPath = cpsTextField.getText();
@@ -248,13 +254,13 @@ public class MainFrame extends JFrame {
                     this.bigFileReader.setCompleteCallback(new CompleteCallback() {
                         @Override
                         public void onComplete() {
-                            if (fileHandle.getSuccess().get() == false) {
+                            if (fileHandle!=null && fileHandle.getSuccess().get() == false) {
                                 appendMsg("很遗憾！未能找到密码！");
                                 showMessageDialog("很遗憾！未能找到密码！");
+                                fileHandle.stop();
+                                fileHandle = null;
                             }
                             resetToggleButton(null);
-                            fileHandle.stop();
-                            fileHandle = null;
                         }
 
                         @Override
@@ -270,16 +276,14 @@ public class MainFrame extends JFrame {
                 }
 
             } else {
-                source.setForeground(Color.WHITE);
-                source.setText("开始试密");
-
                 if (bigFileReader != null) {
                     fileHandle.stop();
                     fileHandle = null;
 
                     bigFileReader.shutdown();
                     bigFileReader = null;
-                    appendMsg("用户停止了任务...");
+                    setEnabledToggleButton(false);
+                    appendMsg("用户停止了任务，等待线程池关闭...");
                     return;
                 }
             }
