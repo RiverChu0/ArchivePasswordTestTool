@@ -73,8 +73,8 @@ public class SwingFileHandleImpl implements FileHandle {
                         mainFrame.appendMsg("压缩包无密码！");
                         logger.info("压缩包无密码！");
                         mainFrame.resetToggleButton(null);
-                        mainFrame.showMessageDialog("压缩包无密码！");
                         bigFileReader.shutdown();
+                        mainFrame.showMessageDialog("压缩包无密码！");
                         return;
                     }
                 } else {
@@ -83,8 +83,8 @@ public class SwingFileHandleImpl implements FileHandle {
                         mainFrame.appendMsg("找到密码[" + line + "]！");
                         logger.info("找到密码[" + line + "]！");
                         mainFrame.resetToggleButton(null);
-                        mainFrame.showMessageDialog("找到密码[" + line + "]！");
                         bigFileReader.shutdown();
+                        mainFrame.showMessageDialog("找到密码[" + line + "]！");
                         return;
                     }
                 }

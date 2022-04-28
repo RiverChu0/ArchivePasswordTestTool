@@ -250,11 +250,11 @@ public class MainFrame extends JFrame {
                         public void onComplete() {
                             if (fileHandle.getSuccess().get() == false) {
                                 appendMsg("很遗憾！未能找到密码！");
+                                showMessageDialog("很遗憾！未能找到密码！");
                             }
                             resetToggleButton(null);
                             fileHandle.stop();
                             fileHandle = null;
-                            bigFileReader.shutdown();
                         }
 
                         @Override
