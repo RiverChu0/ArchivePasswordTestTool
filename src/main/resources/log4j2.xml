@@ -1,0 +1,60 @@
+<Configuration status="WARN" monitorInterval="5">
+    <properties>
+        <property name="projectName">ArchivePasswordTestTool</property>
+    </properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <ThresholdFilter level="debug" /><!-- 这里若不设置，将继承ROOT的级别 -->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t][%l] %-5level - %msg%n" />
+        </Console>
+        <File name="File" fileName="logs/${projectName}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t][%l] %-5level - %msg%n" />
+        </File>
+        <RollingFile name="RollingFileInfo" fileName="logs/${projectName}/info.log"
+                     filePattern="logs/${projectName}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+            <ThresholdFilter level="info" onMatch="ACCEPT"
+                             onMismatch="DENY" />
+            <PatternLayout pattern="%n%-d{yyyy-MM-dd HH:mm:ss.SSS} %n[%p]-[Thread: %t]-[%l]:%n  %m%n" />
+            <!-- Policies:指定滚动日志的策略，就是什么时候进行新建日志文件输出日志 -->
+            <Policies>
+                <!-- TimeBasedTriggeringPolicy:Policies子节点，基于时间的滚动策略，interval属性用来指定多久滚动一次，默认是1 hour。modulate=true用来调整时间：比如现在是早上3am，interval是4，那么第一次滚动是在4am，接着是8am，12am...而不是7am. -->
+                <TimeBasedTriggeringPolicy />
+                <!-- SizeBasedTriggeringPolicy:Policies子节点，基于指定文件大小的滚动策略，size属性用来定义每个日志文件的大小 -->
+                <SizeBasedTriggeringPolicy size="100MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="RollingFileWarn" fileName="logs/${projectName}/warn.log"
+                     filePattern="logs/${projectName}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%n%-d{yyyy-MM-dd HH:mm:ss.SSS} %r%n[%p]-[Thread: %t]-[ %l]:%n  %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100MB" />
+            </Policies>
+            <!-- DefaultRolloverStrategy:用来指定同一个文件夹下最多有几个日志文件时开始删除最旧的，创建新的(通过max属性) -->
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20" />
+        </RollingFile>
+        <RollingFile name="RollingFileError" fileName="logs/${projectName}/error.log"
+                     filePattern="logs/${projectName}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100MB" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <!--<Logger name="org.apache.logging.log4j" level="DEBUG" additivity="true">
+            <AppenderRef ref="File" />
+        </Logger>-->
+        <Root level="DEBUG">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFileInfo" />
+            <!--<AppenderRef ref="RollingFileWarn" />-->
+            <AppenderRef ref="RollingFileError" />
+        </Root>
+    </Loggers>
+</Configuration>
