@@ -1,6 +1,12 @@
 # ArchivePasswordTestTool
 Java Swing 加密压缩包穷举密码工具
 
+# 图
+![主图](etc/main.jpg)
+
+# 参考或借用
+[BigFileReader](https://github.com/yongzhidai/ToolClass/blob/master/src/main/java/cn/dyz/tools/file/BigFileReader.java)
+
 ### 更新记录
 
 <details>
