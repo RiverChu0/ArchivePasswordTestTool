@@ -28,6 +28,8 @@ public class SwingFileHandleImpl implements FileHandle {
     private AtomicBoolean success;
     private int lineTotalCount;
     private boolean stop = false;
+    private String sevenzNullPassword = "";
+    private AtomicBoolean sevenzNullPasswordUse = new AtomicBoolean(false);
 
     private MainFrame mainFrame;
 
@@ -65,12 +67,26 @@ public class SwingFileHandleImpl implements FileHandle {
         if ("application/x-7z-compressed".equals(fileType)) {
             SevenZFile sevenZFile = null;
             try {
-                sevenZFile = new SevenZFile(file, line.toCharArray());
-                if (success.compareAndSet(false, true)) {
-                    mainFrame.appendMsg("找到密码[" + line + "]！");
-                    mainFrame.resetToggleButton(null);
-                    mainFrame.showMessageDialog("找到密码[" + line + "]！");
-                    bigFileReader.shutdown();
+                if (sevenzNullPasswordUse.compareAndSet(false, true)) {
+                    sevenZFile = new SevenZFile(file, sevenzNullPassword.toCharArray());
+                    if (success.compareAndSet(false, true)) {
+                        mainFrame.appendMsg("压缩包无密码！");
+                        logger.info("压缩包无密码！");
+                        mainFrame.resetToggleButton(null);
+                        mainFrame.showMessageDialog("压缩包无密码！");
+                        bigFileReader.shutdown();
+                        return;
+                    }
+                } else {
+                    sevenZFile = new SevenZFile(file, line.toCharArray());
+                    if (success.compareAndSet(false, true)) {
+                        mainFrame.appendMsg("找到密码[" + line + "]！");
+                        logger.info("找到密码[" + line + "]！");
+                        mainFrame.resetToggleButton(null);
+                        mainFrame.showMessageDialog("找到密码[" + line + "]！");
+                        bigFileReader.shutdown();
+                        return;
+                    }
                 }
             } catch (IOException e) {
                 if (!success.compareAndSet(true, true) && !stop) {
@@ -96,6 +112,7 @@ public class SwingFileHandleImpl implements FileHandle {
 
                         if (success.compareAndSet(false, true)) {
                             mainFrame.appendMsg("找到密码[" + line + "]！");
+                            logger.info("找到密码[" + line + "]！");
                             mainFrame.resetToggleButton(null);
                             mainFrame.showMessageDialog("找到密码[" + line + "]！");
                             bigFileReader.shutdown();
@@ -130,6 +147,7 @@ public class SwingFileHandleImpl implements FileHandle {
                 if (!success.compareAndSet(true, true) && !stop) {
                     mainFrame.appendMsg("尝试密码[" + line + "]，错！");
                 }
+                logger.error(e);
             }
         } else {
             mainFrame.appendMsg("不支持的文件类型："+fileType);
