@@ -141,7 +141,15 @@ public class SwingFileHandleImpl implements FileHandle {
 
                         @Override
                         public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
                             mainFrame.appendMsg(msg.toString());
+                            mainFrame.appendMsg("线程池已关闭");
+                            mainFrame.resetToggleButton(null);
+                            mainFrame.showMessageDialog(msg.toString());
                         }
                     });
                     bigFileReader.shutdown();

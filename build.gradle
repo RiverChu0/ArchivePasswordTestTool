@@ -1,3 +1,14 @@
+// 此项必须在plugins之前
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.github.fvarrui:javapackager:1.6.6'
+    }
+}
+
 plugins {
     id 'java'
 }
@@ -28,6 +39,45 @@ dependencies {
     implementation group: 'com.formdev', name: 'flatlaf', version: '2.2'
     implementation group: 'com.miglayout', name: 'miglayout-swing', version: '5.3'
     //implementation group: 'com.weblookandfeel', name: 'weblaf-ui', version: '1.2.13'
+}
+
+apply plugin: 'io.github.fvarrui.javapackager.plugin'
+
+task packageMyApp(type: io.github.fvarrui.javapackager.gradle.PackageTask, dependsOn: build) {
+
+    // mandatory
+    mainClass = 'icu.whereis.ap.Main'
+    // optional
+    bundleJre = true
+    //assetsDir = file('src/main/resources/icon')
+    jrePath = file('D:/soft/work/Java/jre1.8.0_201')
+    generateInstaller = true
+    administratorRequired = false
+    platform = 'auto'
+    version = '0.0.1'
+    //additionalResources = [ file('') ]
+    linuxConfig {
+
+    }
+    macConfig {
+
+    }
+    winConfig {
+        icoFile = file('src/main/resources/icon/ArchivePasswordTestTool.ico')
+        wrapJar = true
+        generateSetup = true
+        generateMsi = true
+        removeOldLibs = true
+        setupMode = 'askTheUser'
+        setupLanguages = [
+            english : 'compiler:Default.isl',
+            japanese : 'compiler:Languages\\Japanese.isl',
+            german : 'compiler:Languages\\German.isl'
+        ]
+        // 是否允许自定义安装路径
+        disableDirPage = false
+    }
+
 }
 
 jar {

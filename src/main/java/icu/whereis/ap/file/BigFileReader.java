@@ -61,8 +61,9 @@ public class BigFileReader {
             public void run() {
                 System.out.println("use time: "+(System.currentTimeMillis()-startTime)+"ms");
                 System.out.println("all line: "+counter.get());
-                completeCallback.onComplete();
                 completeCallback.onSuccess();
+                completeCallback.onComplete();
+                completeCallback.onFinish();
             }
         });
         for (StartEndPair pair:startEndPairs) {

@@ -9,4 +9,6 @@ public interface CompleteCallback {
 
     void onSuccess();
 
+    void onFinish();
+
 }

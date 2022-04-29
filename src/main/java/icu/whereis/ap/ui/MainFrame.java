@@ -3,7 +3,6 @@ package icu.whereis.ap.ui;
 import icu.whereis.ap.StringKit;
 import icu.whereis.ap.file.BigFileReader;
 import icu.whereis.ap.file.CompleteCallback;
-import icu.whereis.ap.file.FileHandleImpl;
 import icu.whereis.ap.file.SwingFileHandleImpl;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
@@ -19,10 +18,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -266,6 +261,11 @@ public class MainFrame extends JFrame {
                         @Override
                         public void onSuccess() {
 
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            appendMsg("线程池已关闭");
                         }
                     });
 
